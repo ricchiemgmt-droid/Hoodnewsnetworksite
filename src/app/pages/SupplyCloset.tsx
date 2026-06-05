@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { ShoppingCart, Clock } from "lucide-react";
+import blackShirt from "../../assets/HNN BLACK.png";
+import whiteShirt from "../../assets/HNN WHITE.png";
 
 export function SupplyCloset() {
   const [timeLeft, setTimeLeft] = useState({ hours: 12, minutes: 45, seconds: 30 });
@@ -27,37 +29,31 @@ export function SupplyCloset() {
   const products = [
     {
       id: 1,
-      name: "HNN PRESS HEAVY HOODIE",
-      price: "$85.00",
-      image: "https://images.unsplash.com/photo-1614214191247-5b2d3a734f1b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdHJlZXR3ZWFyJTIwYmxhY2slMjBob29kaWV8ZW58MXx8fHwxNzgwNjEwMTM1fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      category: "PRESS GEAR",
-      status: "AVAILABLE"
+      name: "H SURE BLACK",
+      price: "TBD",
+      image: blackShirt,
+      category: "APPAREL",
+      status: "AVAILABLE",
+      // TODO: Replace with Shopify product/variant ID when live
+      shopifyVariantId: null as string | null,
     },
     {
       id: 2,
-      name: "THE ANCHOR SILK ROBE",
-      price: "$150.00",
-      image: "https://images.unsplash.com/photo-1614214191247-5b2d3a734f1b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdHJlZXR3ZWFyJTIwYmxhY2slMjBob29kaWV8ZW58MXx8fHwxNzgwNjEwMTM1fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      category: "ANCHOR COLLECTION",
-      status: "SOLD OUT"
+      name: "H SURE WHITE",
+      price: "TBD",
+      image: whiteShirt,
+      category: "APPAREL",
+      status: "AVAILABLE",
+      // TODO: Replace with Shopify product/variant ID when live
+      shopifyVariantId: null as string | null,
     },
-    {
-      id: 3,
-      name: "OFFICIAL NETWORK CAP",
-      price: "$40.00",
-      image: "https://images.unsplash.com/photo-1523380744952-b7e00e6e2ffa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxibGFjayUyMGJhc2ViYWxsJTIwY2FwfGVufDF8fHx8MTc4MDYxMDEzNXww&ixlib=rb-4.1.0&q=80&w=1080",
-      category: "PRESS GEAR",
-      status: "LOW STOCK"
-    },
-    {
-      id: 4,
-      name: "FIELD REPORTER RIG",
-      price: "$120.00",
-      image: "https://images.unsplash.com/photo-1523380744952-b7e00e6e2ffa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxibGFjayUyMGJhc2ViYWxsJTIwY2FwfGVufDF8fHx8MTc4MDYxMDEzNXww&ixlib=rb-4.1.0&q=80&w=1080",
-      category: "FIELD KITS",
-      status: "AVAILABLE"
-    }
   ];
+
+  const handleAddToCart = (shopifyVariantId: string | null) => {
+    if (!shopifyVariantId) return;
+    // TODO: Integrate Shopify Storefront API / Buy SDK checkout here
+    // e.g. client.checkout.addLineItems(checkoutId, [{ variantId, quantity: 1 }])
+  };
 
   return (
     <div className="max-w-7xl mx-auto p-4 md:p-8">
@@ -83,29 +79,15 @@ export function SupplyCloset() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-3xl mx-auto">
         {products.map((product) => (
           <div key={product.id} className="group flex flex-col bg-zinc-950 border-2 border-zinc-900 hover:border-white transition-colors relative">
             <div className="relative aspect-[4/5] bg-zinc-900 p-6 overflow-hidden flex items-center justify-center">
               <ImageWithFallback 
                 src={product.image} 
                 alt={product.name} 
-                className={`w-full h-full object-contain mix-blend-screen transition-transform duration-500 group-hover:scale-110 ${product.status === 'SOLD OUT' ? 'opacity-30 grayscale' : 'opacity-90'}`} 
+                className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110 opacity-90"
               />
-              
-              {product.status === 'SOLD OUT' && (
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="border-4 border-[#FF0000] text-[#FF0000] text-4xl font-black uppercase tracking-widest px-4 py-2 rotate-[-15deg] backdrop-blur-sm bg-black/50">
-                    SOLD OUT
-                  </div>
-                </div>
-              )}
-
-              {product.status === 'LOW STOCK' && (
-                <div className="absolute top-0 right-0 bg-[#FF0000] text-white text-xs font-bold px-3 py-1 uppercase tracking-widest">
-                  ALMOST GONE
-                </div>
-              )}
             </div>
             
             <div className="p-4 flex flex-col flex-1 border-t-2 border-zinc-900">
@@ -117,16 +99,17 @@ export function SupplyCloset() {
               </h3>
               <div className="mt-auto flex items-center justify-between">
                 <span className="text-xl font-sans font-bold text-white">{product.price}</span>
-                <button 
-                  disabled={product.status === 'SOLD OUT'}
+                <button
+                  disabled={!product.shopifyVariantId}
+                  onClick={() => handleAddToCart(product.shopifyVariantId)}
                   className={`flex items-center gap-2 p-2 px-4 font-bold uppercase text-sm tracking-wider transition-colors ${
-                    product.status === 'SOLD OUT' 
-                    ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
-                    : 'bg-white text-black hover:bg-[#FFCC00]'
+                    !product.shopifyVariantId
+                      ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
+                      : 'bg-white text-black hover:bg-[#FFCC00]'
                   }`}
                 >
-                  <ShoppingCart className="w-4 h-4" /> 
-                  {product.status === 'SOLD OUT' ? 'UNAVAILABLE' : 'ADD'}
+                  <ShoppingCart className="w-4 h-4" />
+                  {product.shopifyVariantId ? 'ADD' : 'COMING SOON'}
                 </button>
               </div>
             </div>
